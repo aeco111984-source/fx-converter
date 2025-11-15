@@ -1,6 +1,7 @@
 export const metadata = {
-  title: "FX Converter",
-  description: "Live global FX converter in a modern dark fintech UI.",
+  title: "FX Rates Real Time | Currency Converter",
+  description:
+    "Exchange Rate & Currency Converter – live foreign currency rates in real time. Mid-market FX rates from ECB / Frankfurter.",
 };
 
 export default function RootLayout({ children }) {
@@ -10,18 +11,17 @@ export default function RootLayout({ children }) {
         style={{
           margin: 0,
           minHeight: "100vh",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "flex-start",
-          padding: "24px 12px",
+          padding: "22px 14px",
           background:
-            "radial-gradient(circle at top, #1E293B 0, #020617 40%, #020617 100%)",
+            "radial-gradient(circle at 20% 0%, rgba(30,41,59,0.95), rgba(2,6,23,1) 70%)",
           fontFamily:
             'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
           color: "#E5E7EB",
+          display: "flex",
+          justifyContent: "center",
         }}
       >
-        {children}
+        <div style={{ width: "100%", maxWidth: "520px" }}>{children}</div>
       </body>
     </html>
   );
