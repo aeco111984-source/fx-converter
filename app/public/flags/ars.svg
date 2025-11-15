@@ -1,0 +1,18 @@
+<!-- Argentina / Argentine Peso (ARS) — file: ars.svg -->
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="24" height="24" rx="5" fill="#001F3F"/>
+  <rect x="1" y="1" width="22" height="22" rx="4"
+        stroke="#00B7FF" stroke-width="1.4"/>
+
+  <!-- Light blue -->
+  <rect x="2" y="2" width="20" height="6" fill="#74ACDF"/>
+
+  <!-- White -->
+  <rect x="2" y="8" width="20" height="8" fill="#FFFFFF"/>
+
+  <!-- Light blue -->
+  <rect x="2" y="16" width="20" height="6" fill="#74ACDF"/>
+
+  <!-- Sun -->
+  <circle cx="12" cy="12" r="2.2" fill="#F6B40E" stroke="#FFD86A" stroke-width="0.6"/>
+</svg>
