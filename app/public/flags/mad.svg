@@ -1,0 +1,16 @@
+<!-- Morocco / Moroccan Dirham (MAD) — file: mad.svg -->
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="24" height="24" rx="5" fill="#001F3F"/>
+  <rect x="1" y="1" width="22" height="22" rx="4" stroke="#00B7FF" stroke-width="1.4"/>
+
+  <!-- Red field -->
+  <rect x="2" y="2" width="20" height="20" fill="#C8102E"/>
+
+  <!-- Green pentagram -->
+  <polygon 
+    points="12,6.5 13.2,10 17,10 14,12.2 15.2,15.5 12,13.4 8.8,15.5 10,12.2 7,10 10.8,10"
+    fill="#006233"
+    stroke="#00FF99"
+    stroke-width="0.6"
+  />
+</svg>
