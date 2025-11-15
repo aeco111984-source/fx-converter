@@ -1,227 +1,156 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import currencies from "./currencies";
-import { getRates } from "./rates";
+import { getRates, convert } from "./rates";
+import CURRENCIES from "./currencies";
 
 export default function Page() {
   const [amount, setAmount] = useState(100);
   const [from, setFrom] = useState("EUR");
   const [to, setTo] = useState("USD");
   const [rates, setRates] = useState(null);
-  const [lastUpdated, setLastUpdated] = useState(null);
   const [result, setResult] = useState(null);
-  const [rate, setRate] = useState(null);
-  const [loading, setLoading] = useState(false);
 
-  // Load rates on mount
   useEffect(() => {
-    (async () => {
+    async function load() {
       const data = await getRates();
-      if (data && data.rates) {
-        setRates(data.rates);
-        setLastUpdated(new Date(data.timestamp || Date.now()).toLocaleString());
-        // initial calc
-        computeConversion(data.rates, amount, from, to);
-      }
-    })();
+      setRates(data);
+    }
+    load();
   }, []);
 
-  function computeConversion(ratesMap, amt, fromCode, toCode) {
-    if (!ratesMap) return;
-    const rFrom = ratesMap[fromCode];
-    const rTo = ratesMap[toCode];
-    if (!rFrom || !rTo) return;
-    const cross = rTo / rFrom;
-    setRate(cross);
-    setResult((amt * cross).toFixed(4));
-  }
-
-  function handleConvert() {
+  function doConvert() {
     if (!rates) return;
-    setLoading(true);
-    computeConversion(rates, amount, from, to);
-    setTimeout(() => setLoading(false), 150); // tiny UX delay
+
+    const out = convert(Number(amount), from, to, rates);
+    setResult(out);
   }
-
-  function handleSwap() {
-    const prevFrom = from;
-    setFrom(to);
-    setTo(prevFrom);
-    if (rates) computeConversion(rates, amount, to, prevFrom);
-  }
-
-  const cardOuter = {
-    maxWidth: 420,
-    width: "100%",
-    transform: "skewX(-7deg)",
-    background: "#0F172A",
-    borderRadius: 24,
-    boxShadow: "0 18px 50px rgba(0,0,0,0.7), 0 0 0 1px rgba(34,211,238,0.18)",
-    padding: 22,
-    boxSizing: "border-box",
-  };
-
-  const cardInner = {
-    transform: "skewX(7deg)",
-  };
-
-  const labelStyle = {
-    fontSize: 12,
-    color: "#9CA3AF",
-    marginBottom: 4,
-  };
-
-  const inputStyle = {
-    width: "100%",
-    padding: "10px 12px",
-    borderRadius: 12,
-    fontSize: 16,
-    border: "1px solid #1F2933",
-    background: "#020617",
-    color: "#E5E7EB",
-    boxSizing: "border-box",
-  };
-
-  const selectStyle = {
-    width: "100%",
-    padding: "10px 12px",
-    borderRadius: 12,
-    fontSize: 14,
-    border: "1px solid #1F2933",
-    background: "#020617",
-    color: "#E5E7EB",
-    boxSizing: "border-box",
-  };
 
   return (
-    <div style={{ width: "100%", display: "flex", justifyContent: "center" }}>
-      <div style={cardOuter}>
-        <div style={cardInner}>
-          <div style={{ marginBottom: 12 }}>
-            <div
-              style={{
-                fontSize: 18,
-                fontWeight: 600,
-                color: "#E0F2FE",
-                marginBottom: 2,
-              }}
-            >
-              FX Rates in Real Time
-            </div>
-            <div style={{ fontSize: 11, color: "#9CA3AF" }}>
-              Live mid-market conversions. Dark fintech layout.
-            </div>
-          </div>
+    <div style={{ padding: "20px", color: "white" }}>
+      <h1>FX Rates in Real Time</h1>
 
-          {/* Amount */}
-          <div style={{ marginBottom: 14 }}>
-            <div style={labelStyle}>Amount</div>
-            <input
-              type="number"
-              value={amount}
-              onChange={(e) => setAmount(Number(e.target.value || 0))}
-              style={inputStyle}
-            />
-          </div>
+      {/* AMOUNT */}
+      <input
+        style={{
+          width: "100%",
+          padding: "15px",
+          marginTop: "10px",
+          borderRadius: "10px",
+          background: "#0d1116",
+          color: "white",
+          border: "1px solid #333",
+        }}
+        value={amount}
+        onChange={(e) => setAmount(e.target.value)}
+        type="number"
+      />
 
-          {/* From / To */}
-          <div style={{ marginBottom: 8 }}>
-            <div style={labelStyle}>From</div>
-            <select
-              style={selectStyle}
-              value={from}
-              onChange={(e) => setFrom(e.target.value)}
-            >
-              {currencies.map((c) => (
-                <option key={c.code} value={c.code}>
-                  {c.flag} {c.code} — {c.name}
-                </option>
-              ))}
-            </select>
-          </div>
+      {/* FROM */}
+      <select
+        style={{
+          width: "100%",
+          padding: "15px",
+          marginTop: "15px",
+          borderRadius: "10px",
+          background: "#0d1116",
+          color: "white",
+          border: "1px solid #333",
+        }}
+        value={from}
+        onChange={(e) => setFrom(e.target.value)}
+      >
+        {CURRENCIES.map((c) => (
+          <option key={c.code} value={c.code}>
+            {c.code} — {c.name}
+          </option>
+        ))}
+      </select>
 
-          <div style={{ textAlign: "center", marginBottom: 8 }}>
-            <button
-              onClick={handleSwap}
-              style={{
-                width: 42,
-                height: 42,
-                borderRadius: "999px",
-                border: "1px solid rgba(248,250,252,0.25)",
-                background: "transparent",
-                color: "#22D3EE",
-                fontSize: 18,
-                cursor: "pointer",
-              }}
-            >
-              ⇅
-            </button>
-          </div>
+      {/* SWAP BUTTON */}
+      <button
+        onClick={() => {
+          const f = from;
+          setFrom(to);
+          setTo(f);
+        }}
+        style={{
+          margin: "15px auto",
+          display: "block",
+          background: "#1f80e0",
+          borderRadius: "50%",
+          padding: "10px 20px",
+          fontSize: "20px",
+          border: "none",
+          color: "white",
+        }}
+      >
+        ⇅
+      </button>
 
-          <div style={{ marginBottom: 16 }}>
-            <div style={labelStyle}>To</div>
-            <select
-              style={selectStyle}
-              value={to}
-              onChange={(e) => setTo(e.target.value)}
-            >
-              {currencies.map((c) => (
-                <option key={c.code} value={c.code}>
-                  {c.flag} {c.code} — {c.name}
-                </option>
-              ))}
-            </select>
-          </div>
+      {/* TO */}
+      <select
+        style={{
+          width: "100%",
+          padding: "15px",
+          borderRadius: "10px",
+          background: "#0d1116",
+          color: "white",
+          border: "1px solid #333",
+        }}
+        value={to}
+        onChange={(e) => setTo(e.target.value)}
+      >
+        {CURRENCIES.map((c) => (
+          <option key={c.code} value={c.code}>
+            {c.code} — {c.name}
+          </option>
+        ))}
+      </select>
 
-          {/* Convert button */}
-          <button
-            onClick={handleConvert}
-            disabled={!rates || loading}
-            style={{
-              width: "100%",
-              padding: "12px 0",
-              borderRadius: 999,
-              border: "none",
-              background:
-                "linear-gradient(90deg, #22D3EE 0%, #38BDF8 50%, #22D3EE 100%)",
-              color: "#020617",
-              fontWeight: 700,
-              fontSize: 16,
-              cursor: rates ? "pointer" : "default",
-              opacity: rates ? 1 : 0.6,
-              marginBottom: 12,
-            }}
-          >
-            {loading ? "Converting..." : "Convert"}
-          </button>
+      {/* CONVERT BUTTON */}
+      <button
+        onClick={doConvert}
+        style={{
+          marginTop: "20px",
+          width: "100%",
+          padding: "18px",
+          background: "linear-gradient(90deg,#00b4d8,#0077b6)",
+          borderRadius: "15px",
+          fontSize: "20px",
+          border: "none",
+          color: "white",
+          fontWeight: "bold",
+        }}
+      >
+        Convert
+      </button>
 
-          {/* Result */}
-          {result && (
-            <div style={{ marginTop: 4 }}>
-              <div
-                style={{
-                  fontSize: 18,
-                  fontWeight: 600,
-                  color: "#E5E7EB",
-                  marginBottom: 4,
-                }}
-              >
-                {amount.toFixed(2)} {from} ={" "}
-                <span style={{ color: "#22D3EE" }}>{result}</span> {to}
-              </div>
-              <div style={{ fontSize: 11, color: "#9CA3AF" }}>
-                {rate && <>Rate: {rate.toFixed(6)} • </>}
-                {lastUpdated && <>Updated {lastUpdated}</>}
-                {" • Source: ECB (via exchangerate.host)"}
-              </div>
-              <div style={{ fontSize: 10, color: "#6B7280", marginTop: 4 }}>
-                * Mid-market levels. Bureau and dealer rates may differ.
-              </div>
-            </div>
-          )}
+      {/* RESULT */}
+      {result && (
+        <div
+          style={{
+            marginTop: "25px",
+            padding: "20px",
+            background: "#0d1116",
+            borderRadius: "10px",
+            border: "1px solid #243040",
+          }}
+        >
+          <h3 style={{ margin: 0 }}>Result</h3>
+          <p style={{ marginTop: "10px", fontSize: "23px", fontWeight: "600" }}>
+            {amount} {from} ={" "}
+            {result.result.toLocaleString(undefined, {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 6,
+            })}{" "}
+            {to}
+          </p>
+          <p style={{ marginTop: "5px", opacity: 0.6 }}>
+            Live rate: {result.rate.toFixed(6)}
+          </p>
         </div>
-      </div>
+      )}
     </div>
   );
 }
