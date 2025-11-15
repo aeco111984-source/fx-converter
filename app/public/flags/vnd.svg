@@ -1,0 +1,12 @@
+<!-- Vietnam / Vietnamese Dong (VND) — file: vnd.svg -->
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="24" height="24" rx="5" fill="#001F3F"/>
+  <rect x="1" y="1" width="22" height="22" rx="4" stroke="#00B7FF" stroke-width="1.4"/>
+
+  <!-- Red field -->
+  <rect x="2" y="2" width="20" height="20" rx="3" fill="#DA251D"/>
+
+  <!-- Yellow star -->
+  <polygon points="12,6 13.2,10 17.2,10 13.9,12.4 15,16.5 12,14 9,16.5 10.1,12.4 6.8,10 10.8,10"
+           fill="#FFDE00" stroke="#FFD84D" stroke-width="0.8"/>
+</svg>
