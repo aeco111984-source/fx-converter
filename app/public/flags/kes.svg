@@ -1,0 +1,22 @@
+<!-- Kenya / Kenyan Shilling (KES) — file: kes.svg -->
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="24" height="24" rx="5" fill="#001F3F"/>
+  <rect x="1" y="1" width="22" height="22" rx="4" stroke="#00B7FF" stroke-width="1.4"/>
+
+  <!-- Black top -->
+  <rect x="2" y="2" width="20" height="6" fill="#000000"/>
+
+  <!-- Red middle -->
+  <rect x="2" y="8" width="20" height="6" fill="#BB0000"/>
+
+  <!-- Green bottom -->
+  <rect x="2" y="14" width="20" height="6" fill="#006B3F"/>
+
+  <!-- White stripes -->
+  <rect x="2" y="8" width="20" height="2" fill="#FFFFFF"/>
+  <rect x="2" y="12" width="20" height="2" fill="#FFFFFF"/>
+
+  <!-- Shield -->
+  <ellipse cx="12" cy="12" rx="3.5" ry="5" fill="#BB0000" stroke="#FFFFFF" stroke-width="1"/>
+  <rect x="10.5" y="8" width="3" height="8" fill="#FFFFFF"/>
+</svg>
