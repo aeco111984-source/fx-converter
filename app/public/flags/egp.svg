@@ -1,0 +1,18 @@
+<!-- Egypt / Egyptian Pound (EGP) — file: egp.svg -->
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="24" height="24" rx="5" fill="#001F3F"/>
+  <rect x="1" y="1" width="22" height="22" rx="4" stroke="#00B7FF" stroke-width="1.4"/>
+
+  <!-- Red top -->
+  <rect x="2" y="2" width="20" height="6" fill="#CE1126"/>
+
+  <!-- White middle -->
+  <rect x="2" y="8" width="20" height="6" fill="#FFFFFF"/>
+
+  <!-- Black bottom -->
+  <rect x="2" y="14" width="20" height="6" fill="#000000"/>
+
+  <!-- Gold Eagle -->
+  <path d="M12 8.5l1 2.5h2.5l-2 1.5.8 2.5-2.3-1.5-2.3 1.5.8-2.5-2-1.5H11l1-2.5z"
+        fill="#D4AF37" stroke="#FFF1B8" stroke-width="0.6"/>
+</svg>
