@@ -1,0 +1,22 @@
+<!-- Malaysia / Malaysian Ringgit (MYR) — file: myr.svg -->
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="24" height="24" rx="5" fill="#001F3F"/>
+  <rect x="1" y="1" width="22" height="22" rx="4" stroke="#00B7FF" stroke-width="1.4"/>
+
+  <!-- Blue field -->
+  <rect x="2" y="2" width="12" height="10" fill="#010066"/>
+
+  <!-- Yellow crescent -->
+  <path d="M8 5.5c0 2-1.2 3.5-3 3.5 1.2-.6 2-1.9 2-3.5 0-1.6-.8-2.9-2-3.5 1.8 0 3 1.5 3 3.5z"
+        fill="#FFCC00"/>
+
+  <!-- Yellow star -->
+  <polygon points="9,5 9.6,6.8 11.5,6.8 10,7.9 10.6,9.6 9,8.5 7.4,9.6 8,7.9 6.5,6.8 8.4,6.8"
+           fill="#FFCC00"/>
+
+  <!-- Red & White stripes -->
+  <rect x="2" y="12" width="20" height="2" fill="#CC0001"/>
+  <rect x="2" y="14" width="20" height="2" fill="white"/>
+  <rect x="2" y="16" width="20" height="2" fill="#CC0001"/>
+  <rect x="2" y="18" width="20" height="2" fill="white"/>
+</svg>
