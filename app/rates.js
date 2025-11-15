@@ -1,35 +1,33 @@
-const TEN_MIN = 10 * 60 * 1000;
+// app/rates.js
 
-let cache = {
-  timestamp: 0,
-  base: "EUR",
-  rates: null,
-};
+// --- 1) Free ECB Feed ------------------------------------------------------
+// ECB gives EUR → {all currencies}
+// We fetch once per deploy (server cache)
 
 export async function getRates() {
-  const now = Date.now();
+  const res = await fetch("https://api.exchangerate.host/latest?base=EUR");
+  const data = await res.json();
+  return data.rates;        // { USD: 1.086, GBP: 0.86, ... }
+}
 
-  // Use cache if fresh
-  if (cache.rates && now - cache.timestamp < TEN_MIN) {
-    return cache;
-  }
+// --- 2) Convert ANY → ANY --------------------------------------------------
+// If user asks: amount * FROM/TO
+// Example: JPY → USD = (EUR→USD) / (EUR→JPY)
 
-  try {
-    const res = await fetch(
-      "https://api.exchangerate.host/latest?base=EUR"
-    );
-    const data = await res.json();
+export function convert(amount, from, to, eurRates) {
+  if (!eurRates[from] || !eurRates[to]) return null;
 
-    cache = {
-      timestamp: now,
-      base: data.base,
-      rates: data.rates,
-    };
+  // EUR → FROM
+  const eurToFrom = eurRates[from];
 
-    return cache;
-  } catch (e) {
-    console.error("Rate fetch failed", e);
-    // Fallback: return last known cache if exists
-    return cache;
-  }
+  // EUR → TO
+  const eurToTo = eurRates[to];
+
+  // FROM → TO
+  const rate = eurToTo / eurToFrom;
+
+  return {
+    rate,
+    result: amount * rate,
+  };
 }
