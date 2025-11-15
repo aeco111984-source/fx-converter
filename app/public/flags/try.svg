@@ -1,0 +1,17 @@
+<!-- Turkey / Turkish Lira (TRY) — file: try.svg -->
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="24" height="24" rx="5" fill="#001F3F"/>
+  <rect x="1" y="1" width="22" height="22" rx="4"
+        stroke="#00B7FF" stroke-width="1.4"/>
+
+  <!-- Red background -->
+  <rect x="2" y="2" width="20" height="20" fill="#E30A17"/>
+
+  <!-- Crescent -->
+  <path d="M13 12c0 2.5-1.7 4.5-3.8 4.5 1.4-.8 2.3-2.3 2.3-4.5s-0.9-3.7-2.3-4.5c2.1 0 3.8 2 3.8 4.5z"
+        fill="white"/>
+
+  <!-- Star -->
+  <polygon points="15,10 16,12 18.3,12 16.4,13.4 17.2,15.5 15,14.2 12.8,15.5 13.6,13.4 11.7,12 14,12"
+           fill="white"/>
+</svg>
