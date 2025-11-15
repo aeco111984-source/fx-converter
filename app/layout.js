@@ -1,7 +1,8 @@
+// app/layout.jsx
 export const metadata = {
-  title: "FX Rates Real Time | Currency Converter",
+  title: "FX Rates Real Time",
   description:
-    "Exchange Rate & Currency Converter – live foreign currency rates in real time. Mid-market FX rates from ECB / Frankfurter.",
+    "Exchange Rate & Currency Converter – live foreign currency rates in real time.",
 };
 
 export default function RootLayout({ children }) {
@@ -11,17 +12,18 @@ export default function RootLayout({ children }) {
         style={{
           margin: 0,
           minHeight: "100vh",
-          padding: "22px 14px",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "flex-start",
+          padding: "24px 12px",
           background:
-            "radial-gradient(circle at 20% 0%, rgba(30,41,59,0.95), rgba(2,6,23,1) 70%)",
+            "radial-gradient(circle at top, #1E293B 0, #020617 40%, #020617 100%)",
           fontFamily:
             'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
           color: "#E5E7EB",
-          display: "flex",
-          justifyContent: "center",
         }}
       >
-        <div style={{ width: "100%", maxWidth: "520px" }}>{children}</div>
+        {children}
       </body>
     </html>
   );
