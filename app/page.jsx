@@ -1,84 +1,57 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import CURRENCIES from "./currencies";
+import { getRateWithFallback } from "./rates";
 
-const API_URL = "https://api.exchangerate.host/latest?base=EUR";
+const cardOuterStyle = {
+  maxWidth: 420,
+  width: "100%",
+  transform: "skewX(-7deg)",
+  background:
+    "radial-gradient(circle at top left,#020617 0,#020617 45%,#020617 100%)",
+  borderRadius: 26,
+  boxShadow:
+    "0 20px 55px rgba(0,0,0,0.85), 0 0 0 1px rgba(56,189,248,0.2)",
+  padding: 22,
+  boxSizing: "border-box",
+};
+
+const cardInnerStyle = {
+  transform: "skewX(7deg)",
+};
+
+const labelStyle = {
+  fontSize: 11,
+  textTransform: "uppercase",
+  letterSpacing: 0.08,
+  color: "#9CA3AF",
+  marginBottom: 4,
+};
+
+const inputBase = {
+  width: "100%",
+  padding: "11px 13px",
+  borderRadius: 14,
+  fontSize: 15,
+  border: "1px solid #1F2937",
+  background: "#020617",
+  color: "#E5E7EB",
+  boxSizing: "border-box",
+};
+
+const selectBase = {
+  ...inputBase,
+  fontSize: 14,
+};
 
 export default function Page() {
   const [amount, setAmount] = useState(100);
   const [from, setFrom] = useState("EUR");
   const [to, setTo] = useState("USD");
-  const [rates, setRates] = useState(null);
-  const [lastUpdated, setLastUpdated] = useState(null);
-  const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-
-  // Fetch EUR rates once when page loads
-  useEffect(() => {
-    async function loadRates() {
-      try {
-        const res = await fetch(API_URL, { cache: "no-store" });
-        const data = await res.json();
-        if (data && data.rates) {
-          setRates(data.rates);
-          setLastUpdated(
-            data.date
-              ? new Date(data.date + "T12:00:00Z").toLocaleString()
-              : new Date().toLocaleString()
-          );
-        } else {
-          setError("Could not load FX rates.");
-        }
-      } catch (e) {
-        console.error(e);
-        setError("Could not load FX rates.");
-      }
-    }
-    loadRates();
-  }, []);
-
-  function convert() {
-    setError("");
-    if (!rates) {
-      setError("Rates not loaded yet.");
-      return;
-    }
-    const amt = Number(amount);
-    if (isNaN(amt) || !amt) {
-      setError("Enter a valid amount.");
-      return;
-    }
-    const rFrom = rates[from];
-    const rTo = rates[to];
-    if (!rFrom || !rTo) {
-      setError("Selected pair not available.");
-      return;
-    }
-
-    setLoading(true);
-    const crossRate = rTo / rFrom;
-    const value = amt * crossRate;
-
-    setResult({
-      from,
-      to,
-      amount: amt,
-      rate: crossRate,
-      value,
-    });
-
-    setTimeout(() => setLoading(false), 120);
-  }
-
-  function handleSwap() {
-    const prevFrom = from;
-    setFrom(to);
-    setTo(prevFrom);
-    // Re-run conversion if we already have a result
-    if (rates && result) convert();
-  }
+  const [result, setResult] = useState(null);
 
   function formatNumber(n, min = 2, max = 6) {
     return n.toLocaleString(undefined, {
@@ -87,58 +60,65 @@ export default function Page() {
     });
   }
 
-  // === Styles ===
-  const outer = {
-    width: "100%",
-    display: "flex",
-    justifyContent: "center",
-  };
+  async function handleConvert() {
+    setError("");
+    setResult(null);
 
-  const cardOuter = {
-    maxWidth: 420,
-    width: "100%",
-    transform: "skewX(-7deg)",
-    background: "radial-gradient(circle at top left,#020617 0,#020617 45%,#020617 100%)",
-    borderRadius: 26,
-    boxShadow:
-      "0 20px 55px rgba(0,0,0,0.85), 0 0 0 1px rgba(56,189,248,0.2)",
-    padding: 22,
-    boxSizing: "border-box",
-  };
+    const amt = Number(amount);
+    if (!amt || Number.isNaN(amt)) {
+      setError("Enter a valid amount.");
+      return;
+    }
 
-  const cardInner = {
-    transform: "skewX(7deg)",
-  };
+    setLoading(true);
+    try {
+      const { rate, asOf, source } = await getRateWithFallback(from, to);
+      const value = amt * rate;
 
-  const label = {
-    fontSize: 11,
-    textTransform: "uppercase",
-    letterSpacing: 0.08,
-    color: "#9CA3AF",
-    marginBottom: 4,
-  };
+      setResult({
+        amount: amt,
+        from,
+        to,
+        rate,
+        value,
+        asOf,
+        source,
+      });
+    } catch (e) {
+      console.error(e);
+      setError("Could not load FX rates.");
+    } finally {
+      setLoading(false);
+    }
+  }
 
-  const inputBase = {
-    width: "100%",
-    padding: "11px 13px",
-    borderRadius: 14,
-    fontSize: 15,
-    border: "1px solid #1F2937",
-    background: "#020617",
-    color: "#E5E7EB",
-    boxSizing: "border-box",
-  };
-
-  const selectBase = {
-    ...inputBase,
-    fontSize: 14,
-  };
+  function handleSwap() {
+    const prevFrom = from;
+    setFrom(to);
+    setTo(prevFrom);
+    // Optional: auto-reconvert if we already had a result
+    if (result) {
+      handleConvert();
+    }
+  }
 
   return (
-    <div style={outer}>
-      <div style={cardOuter}>
-        <div style={cardInner}>
-          {/* Header */}
+    <div
+      style={{
+        width: "100%",
+        minHeight: "100vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        background:
+          "radial-gradient(circle at top,#020617 0,#020617 52%,#020617 100%)",
+        padding: 18,
+        boxSizing: "border-box",
+      }}
+    >
+      <div style={cardOuterStyle}>
+        <div style={cardInnerStyle}>
+          {/* HEADER */}
           <div style={{ marginBottom: 12 }}>
             <div
               style={{
@@ -155,9 +135,9 @@ export default function Page() {
             </div>
           </div>
 
-          {/* Amount */}
+          {/* AMOUNT */}
           <div style={{ marginBottom: 14 }}>
-            <div style={label}>Amount</div>
+            <div style={labelStyle}>Amount</div>
             <input
               type="number"
               style={inputBase}
@@ -166,9 +146,9 @@ export default function Page() {
             />
           </div>
 
-          {/* From */}
+          {/* FROM */}
           <div style={{ marginBottom: 10 }}>
-            <div style={label}>From</div>
+            <div style={labelStyle}>From</div>
             <select
               style={selectBase}
               value={from}
@@ -182,7 +162,7 @@ export default function Page() {
             </select>
           </div>
 
-          {/* Swap button */}
+          {/* SWAP BUTTON */}
           <div style={{ textAlign: "center", marginBottom: 10 }}>
             <button
               onClick={handleSwap}
@@ -206,9 +186,9 @@ export default function Page() {
             </button>
           </div>
 
-          {/* To */}
+          {/* TO */}
           <div style={{ marginBottom: 16 }}>
-            <div style={label}>To</div>
+            <div style={labelStyle}>To</div>
             <select
               style={selectBase}
               value={to}
@@ -222,29 +202,29 @@ export default function Page() {
             </select>
           </div>
 
-          {/* Convert button */}
+          {/* CONVERT BUTTON */}
           <button
-            onClick={convert}
-            disabled={!rates || loading}
+            onClick={handleConvert}
+            disabled={loading}
             style={{
               width: "100%",
               padding: "13px 0",
               borderRadius: 999,
               border: "none",
               background:
-                "linear-gradient(90deg,#22C1C3 0%,#0EA5E9 45%,#22C1C3 100%)",
+                "linear-gradient(90deg,#22C1C3 0%,#0EA5E9 48%,#22C1C3 100%)",
               color: "#020617",
               fontWeight: 700,
               fontSize: 16,
-              cursor: !rates ? "default" : "pointer",
-              opacity: rates ? 1 : 0.5,
+              cursor: loading ? "default" : "pointer",
+              opacity: loading ? 0.7 : 1,
               marginBottom: 10,
             }}
           >
             {loading ? "Converting…" : "Convert"}
           </button>
 
-          {/* Error */}
+          {/* ERROR */}
           {error && (
             <div
               style={{
@@ -257,7 +237,7 @@ export default function Page() {
             </div>
           )}
 
-          {/* Result */}
+          {/* RESULT */}
           {result && (
             <div
               style={{
@@ -293,9 +273,9 @@ export default function Page() {
                 {result.to}
               </div>
               <div style={{ fontSize: 11, color: "#9CA3AF" }}>
-                Rate: {formatNumber(result.rate, 6, 6)}
-                {lastUpdated && <> • Updated {lastUpdated}</>}
-                {" • Source: ECB (exchangerate.host)"}
+                Rate: {formatNumber(result.rate, 6, 6)}{" "}
+                {result.asOf && <>• Updated {result.asOf}</>} • Source:{" "}
+                {result.source}
               </div>
               <div
                 style={{
