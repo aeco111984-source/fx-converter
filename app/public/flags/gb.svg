@@ -1,0 +1,15 @@
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="24" height="24" rx="5" fill="#0A0A0A"/>
+  <rect x="1" y="1" width="22" height="22" stroke="#00B7FF" stroke-width="1.4"/>
+
+  <rect x="2" y="2" width="20" height="20" fill="#1E1E1E"/>
+
+  <!-- UK Flag Neon Elements -->
+  <path d="M2 2 L22 22" stroke="#FF0033" stroke-width="2"/>
+  <path d="M22 2 L2 22" stroke="#FF0033" stroke-width="2"/>
+  <rect x="10" y="2" width="4" height="20" fill="#00247D"/>
+  <rect x="2" y="10" width="20" height="4" fill="#00247D"/>
+
+  <!-- Glow outline -->
+  <rect x="2" y="2" width="20" height="20" stroke="#00B7FF" stroke-width="1.2"/>
+</svg>
